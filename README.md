@@ -1,2 +1,384 @@
 # VegModel
 Vegetation model used in my phd
+last version with incoorpoating Quillow region
+
+##19.03.2009
+VM-sensi	
+* MCMC() -- l271f Schwankung der Parameter verringert (.25)
+* main() -- l108 Kettenlänge: 1000 pro pk
+
+##11.03.2009
+VM-sensi	
+* MCMC() -- l271f Schwankung der Parameter verringert
+##04.03.2009
+* localPops	*ohne Angabe von "init" werdne die ersten 200 Jahre nicht dokumentiert
+
+
+##25.02.2009	VM-090225-loc_getGTa* bzw. *b.exe
+localPops	
+* Ausschalten der overflow-Abbrüche
+
+##24.02.2009	VM-090224-loc_getGTa.exe
+LocalPops			
+* Rückname der am 30.1. und 16.1. vorgenommenen Änderungen
+mclasses.cpp	
+* setPopulations() each chosen cell (all pcInitPop - not depending on MusterCapacity) gets 10000Seeds initially
+mclasses	
+* patchDynamics_corr() und oneYear() additional bool argument disables disturbances
+VM-090224-loc_getGTa.exe		
+		*oneRun() -- version without disturbances
+				
+##10.02.2009
+VM090209a-sensi		*general: chain length changed to 200 per pk
+
+##09.02.2009
+sensiVM	sensiVM.cpp	
+* MCMC() -- reads a list of pks given in input-file
+* general: 5parallel runs and chain length of 50 per PK
+
+##06.02.2009
+sensiVM	sensiVM.cpp	
+* MCMCDoc() -- adds mcmc-trial info to a file
+* MCMC() -- change only one parameter a time; mcmc length ste to 10 for testing; startfile consists of a)two lines with boundary information and b) a list of pks chosen previosly from chains
+			*MCMC() -- die neue version wird nie übernommen, auch wenn erfolgreich --> mcmcdoc
+
+##30.01.2009
+localpops		
+* Wie V081211a aber mit Beachtung des 'qll_buff_1km-sites-100.aig'- Filters / vorher *-points-* und Differenz zu mcmc-Version, jetzt kompatibel zu mcmcVersion
+
+##16.01.2009
+localPops		
+* V081211a wie V081211 aber ohne jährliches Monitoring (eigentlich eine allg Version) - damit lifecycle-tests schneller gehen
+
+##15.12.2008
+mcmc			
+ * mcmc() -- ändere MH-Vergleich zu adj*(lrisk+1e-3)/(llrisk+1e-3) 
+##12.12.2008
+mcmc			
+ * mcmc() -- ändere MH-Vergleich zu adj*lrisk/llrisk (adj=0.75)
+##11.12.2008
+all	mresults	
+* class Year, yearly_selcells(), class Run, runly() -- introduced new variable 'crashed', which documents population crashes due to density effects
+mcmc			
+* Run::risk() -- mean annual crashing rate
+* mcmc() -- Metropolis hastings optimizes for minimum crashing rates
+
+all	mclasses	
+* setPopualtions() -- reset to Poisson(100)
+localPops		
+* oneRun() -- Extinction frühestens nach 10 Jahren, wegen Einlaufphase
+
+##10.12.2008
+all 	mclasses	
+* setPopulations() -- initSeeds sind jetzt Poisson(1000) statt 100, für localPops-Version
+
+##18.11.2008
+all	species		
+* germestab() -- etablierung von vorhandenen Keimlingen auch, wenn keine Samen in der Samenbank sind (sollte aber kein wichtiger Bug sein)
+
+##17.11.2008
+mcmc_a			
+* arable fields disturb to .95 again, and overflow treshold is .1 again
+all	mclasses	
+* OneYear(), patchDynamics_corr() -- implemented autocorrelated disturbances with recursive function NextInPatch(): all cells of the same patch(no diagonal connections) have the same disturbance- and succession events
+* LoadLandscape() und LoadResultCells() -- vertausche Einlesen von xmax und ymax um Streifigkeit der Patches zu verhindern == korrektes Einlesen der LS
+
+##14.11.2008
+all	species.cpp	
+* stoch() - debug the possibility to return more inds than initially evident
+localPops		
+* erstelle Version zur Verfolgung einzelner Populationen
+all:	main.cpp	
+* Result-Landscape is 'points', not 'sites'
+
+##13.11.2008
+all: 	mclasses	
+* ValueToDisturbanceRate() -- disturb arable fields to 100%
+
+##10.11.2008
+all:    mclasses	
+* Landscape::setSize() -- InitVerteilung(10000) statt 2000
+mresults	
+* Year::yearly_selcells() -- overrun if at least 5% of capacity is filled
+
+##30.10.2008
+all:	mclasses	
+* Landscape::LoadResultCells() -- adapted code to new files ('0' is valid for site-file and '1'ff is valid for point-file)
+
+##29.10.2008
+mcmc:	main		
+* eingelesene Grids: Landscape-"qll-hgug100-a.aig"; Auswertezellen-"qll_buff_1km-sites-100.aig"
+
+##28.10.2008
+mcmc:	mcmc()		
+* Die Standardverteilung der neuen Parameter wurde verdoppelt mcmcVegModel.cpp line 298f
+
+mQ-ph4.dat		
+* pcInitPop now is .1
+all:	mresults	
+* yearly_selcells() -- 	document visualpops as occupied; 
+						#individuals are count without seedlings
+mclasses	
+* setPopulations() -- poisson-distributed number of seeds (mean=100) is initially set to pcInitPop cells of arable habitat
+* ValueToMaxCap() -- maximum capacities are now tenfold: weight*10000
+
+##27.10.2008
+all:	mclasses	
+* ValueToDisturbanceRate() -- aktualisiere Daten nach dem Meeting am 24.10. mit Florian und Michael
+	mresults	
+* yearly_selcells() -- Abbruch-Kriterien geändert: 
+	- extinct wenn keine beobachtete Population mehr als 10 sichtbare Individuen hat
+	- overflow wenn die Individuenzahl der selektierten Flächen 1/10 ihrer Kapazität übersteigt
+##21.10.2008
+mcmc:   prefs.cpp /.h	
+* patched the establishing and growing communication in mcmc-parameter-change changeOTransition etc
+##14.10.2008
+###V081014b
+all:	mclasses	
+* Landscape::setPopulations() -- init pops are set in arable habitats exclusively
+mcmc: 	mresults	
+* yearly_selcells() -- Abbruch wenn a) kein arable field mehr occupied oder b) mehr als 10% der Flächen occupied sind
+###V081014
+mcmc:	mcmc:		
+* trial(5)is standard now
+* chain length is 20000; counted are unvalid trials too
+prefs.cpp	
+* setOTransition: for estab and growth params -- internally independent variables are used to define new parameters
+
+##10.10.2008
+mcmc:	prefs.cpp:	
+* setOTransition() -- ungültige Werte für Etablierung werden jetzt ignoriert statt auf maximalen Wert gesetzt
+	mcmcmodel	
+* mcmc() -- 
+
+##08.10.2008
+all:	random.h:	
+* g_rnd_range() -- gibt nur Werte innerhalb des Ranges wieder (nicht range-werte selbst)
+* g_rnd_log_range() -- bezieht sich auf g_rnd_range()
+* rnd_log_range() -- bezieht sich auf rnd_range()
+
+##06.10.2008
+all: 	prefs		
+* Preferences::MusterCapacity enthält die reinen HGUG-Werte; Interpretation in 'setPopulations()' und 'patchDynamics()'
+	mclasses: 	
+* add function ValueToDisturbanceRate() which interpretes HGUGs to local disturbance rates
+
+new: *.dat file mQ-ph3.dat mit patchDecreaseRate=1.0 und cA={-.99,.99}; distRate ausser Funktion wg. s.o.
+
+##18.09.2008
+all:    mresults:	
+* gmlambda() -- calculated based on inds from year 5 to year 25
+* fixed some possible bugs in Version(Version*) und Zuweisungsoperatoren
+##17.09.2008
+all:	mresults:	
+* gmLambda() -- replaced maxTime by timeToExt in min(21,...)
+* fixed some possible bugs in classes Run and Version
+
+##15.09.2008
+all:	Results,Version,Run: omited list of Versions in Results to save ressources; placed some result variables in heap (Freispeicher)-->had lots of trouble by segnemtation faults etc.
+
+##12.09.2008
+all:	Year:		
+* class Year() jetzt ohne vector<>cellState und vector<>managed, wegen bad_alloc im bioinf-Cluster (Ressourcen sparen!!)
+
+##09.09.2008
+all:	fileout:	
+* runly() -- gebe Abbruchgrund aus [reo]
+	mclasses:	
+* setPopulations() -- initiale Individuen werden als Samen verteilt
+
+##05.09.2008
+main:			
+* OneRun() -- benutze richtigerweise yearly_selcells()
+mcmc: 			
+* mcmc() -- werte Zahl erfolgreicher Durchläufe
+
+##02.09.2008
+main:			
+* einmaliges Einlesen der Landschaft und des Analysefilters (Project-->CodeBlocks)
+all:	mclasses:	
+* Landscape::loadLandscape() -- lese ganze Landschaft ein (nicht nur 1/4)
+	fileout:	
+* runly() -- wenn overperformed time=time+maxTime
+	mresults:	
+* yearly() -- erhöhe overperform-Threshold
+
+##01.09.2008
+mcmc:			
+* Kettenlänge auf 10000 erhöht
+
+##29.08.2008
+all:	species.cpp	
+* stoch(): if p*number is >level, the result is returned, if lower, the poisson-value is returned
+mcmc:			
+* a PK is accepted if 3runs neither go extinct before 300years or overgrowth the landscape in this time scale
+
+##28.08.2008
+all:	species.cpp	
+* stoch(): returns poisson_number with lambda (p*number)
+--> very very fast
+##25.08.2008
+all:	species.cpp	
+* stoch(): returns 0 when p is zero
+
+##20.08.2008
+mcmcversion
+all:	
+* zum Debugger CodeBlocks gewechselt
+* Einlesen der Buffer-Datei: Auswertung aller sehr guten Habs innerhalb der Pufferzone
+* Abbruch wenn Ind/Capacity<0.1
+* nur 1/2 der Landschaft eingelesen
+
+##18.08.2008
+mcmcversion:		
+* queue wird fortgesetzt wenn schon eine <name>-n.txt existiert. Dazu wird die letzte PK der Datei eingelesen und als startversion genommen. Parameteränderungen (sigma der Normalverteilung) sind nicht mehr abhängig von der Ausgangsversion.
+	prefs.cpp	
+* Preferences::getPrefs()
+
+Nachtrag: kleiner Bug in MCMC():Lösung--> trage letzte Version in Ergebnisobjekt ein und lasse sie noch mal laufen 
+
+##14.08.2008
+all:			
+* Auslagerung der Auslese des LC-Files
+	mclasses	
+* new: Landscape::loadLandscape() -- einmaliges Einlesen des LC-Files vor den Läufen
+* new: ValueToMaxCap() -- Interpretation der Filedaten in Capacity-Werte
+			   methode 'weight' interpretiert Wichtung*1000 als Kapazität
+
+##13.08.2008
+mcmcversion:		
+* set standard landscape file to "qll-hgugdom-200.aig"
+all:	mclasses	
+* seedDispersal()-->Torus in absorbing boundaries umgewandelt
+
+##09.06.2008
+all:	mclasses	
+* setPopulations() read in only first half of landscape to shorten calculation time 
+
+##28.05.2008
+all:	mresults	
+* yearly()-->exit if (double)reprod/metapopCapacity>0.005
+	mclasses	
+* setPopulations()-->read in arcinfo-rastergrid
+	species		
+* stoch()-->not stochastic if deterministic result exeeds 10
+mcmcversion:
+
+##27.05.2008
+all:	species.cpp	
+* define stoch-function that returns stochastic numbers for given integer and proportion; and use this function for all relevant (non-fecundity-) matrix transitions
+	mclasses.h	
+*initVerteilung()-->gesamte Gridgröße
+* setPopulations()-->erkennt *.aig-files (arc-info grid) mit beliebigen Gridgrößen
+mainversion:		
+* die 1-lcfile-version startet automatisch mit einer *.aig-datei (z.Zt. gesamtes Quillow)
+-->Linker error: mcount; auch wenn ich Main Version auf eine alte Version zurücksetze
+
+##24.04.2008
+all:	prefs.cpp:	* setTransition() and setOTransition() mit Summenabfrage für estab und growth(juv)--> <=1
+			* get*PrefSet() new 'setOTransition()' included
+
+##23.04.2008 V080422
+all: 	mclasses.cpp: 	* lc-files are interpreted as 0/5000 for maxCapacity
+			* initial capacity is full for all
+	random.h:	* rnd_log_range() and g_rnd_log_range() find new values on log10-basis
+	prefs.cpp:	* getNewPrefSet() change dispersed with rnd_log_range()
+			* get*VarPrefSet() change dispersed with g_rnd_log_range()
+mcmcVersion:	* 3 possible arguments: 1) *.dat file name; 2) [1-6] nmb of Landscape type; 3) starting index
+		* MCMC(): if original PC is chosen, it's taken over - not ignored as before
+mainVersion:	* 2 possible arguments: 1) *.dat file name; 2) [1-6] nmb of Landscape type
+Key for Landscape Type:
+1:dim1-ph1; 2:dim2-ph1; 3:dim3-ph1; 4:dim1-ph2; 5:dim2-ph2; 6:dim3-ph2
+PotHab 0.55: ph1	
+PotHab 0.72: ph2	
+Dimension 2.1: dim1
+Dimension 2.3: dim2
+Dimension 2.5: dim3
+
+
+##25.02.2008
+all: max length of parameter Combination is set to 52*10; fpos<-tellg zuweisungen geändert zur korrekten Adressierung der PKs (#-> -1; PK ->+-0)
+mcmcVersion: disable Results::freeMem since program ever fails at this point
+
+##21.02.2008
+mcmcVersion: Trial(3) is standard again -- dauert sonst zu lange
+all:	Liste von dispersal-targetCells auf 10000 erhöht (initVerteilung())- für pLDD-Versuche
+
+##20.02.2008
+mcmcVersion: Trial(5) is standard now
+all: 	run is stopped if #individuals exceed .2 of total capacity (respect to very isolated islands)
+	output of L(20) is added 
+	in case of overperformance the true year of exit is reportet
+
+##09:50 19.02.2008
+###Erweiterungen des Modells
+  - Bedeutung von manmode im Modell ändern --> Frequenz des Managements (jedes Jahr/alle 2-3Jahre etc.)
+  - manmode={0,1} haben den selben Effekt wie vorher --> 0=freie Sukzession 1=compense (no additional sukzession); Werte dazwischen sind eine Wahrscheinlichkeit für 0/1.
+
+###Aktuelle Modellverwaltung:
+Versionen zum Simulieren werden in Dev/C++ verändert und anschließend zum Test am Bioinformatik-Cluster compiliert. Klappt ganz gut, auch mit der Batch-Programmierung komme ich zurecht. (Emacs ist allerdings noch ein Problem für mich)
+Sollte eine 'schicke' Version benötigt werden, wird sie mit BB5 erstellt, aber nur Referenzen zu den 'echten' Klassen benutzt (keine lokalen Kopien erstellen).
+
+##09:23 14.02.2008
+* Umwandlung des Modells in eine GNU-kompatible Variante; Erstellung einer 'exe' in Linux --done 080213
+
+##21.11.2007 VegModel071121 -mcmc, -sim, und -loc
+		Populations-initialisierung mit nur 10-50 Individuen (statt 1/10 der actCap. wie bisher)
+		-loc: programmoption "init" ermöglicht Dateiausgabe ab dem ersten Jahr: VegModelxxxxxx-loc.exe datei.dat init
+
+##20.11.2007 
+###VegModel071120-mcmc
++ MCMC-Version wie in V071119, aber mit 1-(l2-l1) als Kriterium
++ -sim, -loc, -mcmc
++ alle Kapazitäten ver-10-facht
+
+##19.11.2007 VegModel071119-mcmc
++ MCMC-Version mit anderer Optimierung: die maximale/mittlere (meta)Popwachstumsrate der ersten 20 Jahre soll minimiert werden
+
+##16.11.2007 VegModel071116-mcmc
++ MCMC-Version mit höherer Akzeptanzschwelle, für höhere Risk-Werte
+
+##05.11.2007 
+###VegModel071105-sim und -loc und -mcmc
++ Freigabe von Speicherplatz um rätselhafte Abstürze zu verhindern (Results::freeMem(int))
+###Vegmodel071105-loc
++ Berücksichtigung der Init-Zeit
+
+##01.11.2007 VegModel071101-sim und -loc und -mcmc
+    !!!Bug!!! Funktion getInds() in species.cpp hat die Samen mitgezählt --> Korrektur (SEED->SEEDL)
+		Fehler existiert mind. seit Mitte 08/07
+
+##15.10.2007 
+###VegModel071015-sim.exe
+Model Version zum Simulieren
+  * Ausgabe:	wie Ve3rsion vom 12.10.07, nur Nmp und IndsPerPop beziehen sich auf Juv-Gen; Abbruchbedingung wie in Version eher als 12.10. 
+
+##12.10.2007 
+###VegModel071012-sim.exe
+  Model Version zum Simulieren
+  * Ausgabe:	"Nmp" und "IndsPerPop" beziehen sich auf die Sommerpopulation des Jahres (Seed-Gen), statt nur auf die adulten stadien zum Jahresende
+
+##05.10.2007 
+###VegModel071005-sim.exe
+  Model Version zum Simulieren
+  * Ausgabe:	"Time", "Nmp", "minAntBes", "AntBes", "IndsPerPop", "ExtRate", "ColRate", "risk"
+		*.txt für Time to Extinction und Mittelwerte für ganzen Run (original)
+ 		*-s10.txt für 5 slides a 10 Jahre Mittelwert (neu)
+		*-s50.txt für 5 slides a 50 Jahre Mittelwert (ab V 070918)
+  * Eingabe:	*.dat Textfile mit 1 Parameterkombination pro Zeile; Auskommentieren mit '#' möglich (ca. ab v 0708xx)
+  * Liste der Samenverteilungsfelder 1000 Elemente lang (ca. ab v 0708xx)
+
+###VegModel070829-mcmc-a.exe
+  Model Version für Generation einer MCMC-Kette
+  * Ausgabe:	*-n.dat Liste "erfolgreicher" Parameterkombinationen (n=4000)
+		*.txt Output-variablen für die getesteten Parameterkombinationen (PK)
+  * Eingabe:	*.dat zwei PK, die das untere und obere Limit für die Parameterwahl liefern
+  * Algorithmus:	
+    1. Start-PK frei wählen und laufen lassen
+		1a. drei parallele runs, keiner darf aussterben (Rückgabe 0); Mittelwert der Risk-Werte wird zurückgegeben
+		2. neue Variante (PK) auswählen
+		2a. zwei Parameter werden unabhängig entsprechend ihrer Rahmenwerte und ihres derzeitigen Wertes verändert
+		2b. - neue Version nach 1a) laufen lassen
+		3. Vergleich der risk-Werte der neuen und der alten pk
+		3a. wenn zufall(0,1)<risk(k)/risk(k-1) wird neue PK übernommen, sonst die alte beibehalten; dh Übernahme auf jeden Fall, wenn risk(k)>risk(k-1)
+		4. weiter mit 2) basierend auf alter oder neuer (siehe 3a)) PK
