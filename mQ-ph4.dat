@@ -1,0 +1,4 @@
+#parameter pcPotHab und disturbanceRate ohne Funktion ab V081006
+#ID	maxYears	MaxRun	pcPotHab	InitPop	disturbanceRate	patchDecreaseRate	CompAbil	dispersalRate	manmode	m1	m2	m3	m4	m5	g1	g2	g3	g4	g5	b1	b2	b3	b4	b5	t1	t2	t3	t4	t5	t6	t7	t8	t9	t10	t11	t12	t13	t14	t15	t16	t17	t18	t19	t20	t21	t22	t23	t24	t25
+30000	500	5	1	0.1	0.75	1	-0.99	1e-10	0	1	0	1	0	1	0.2	0	0.2	0	0.2	0.2	0	0.2	0	0.2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+30000	500	5	1	0.1	0.75	1	0.99	0.01	0	1	0	1	0	1	0.2	0	0.2	0	0.2	0.2	0	0.2	0	0.2	1	0	0	0	5000	1	1	0	0	0	0	1	1	5	5	0	1	1	1	1	0	1	1	1	1
